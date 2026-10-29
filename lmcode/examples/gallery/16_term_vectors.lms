@@ -27,7 +27,7 @@ assert_true(seen == 1, "red found");
 assert_true(reader.term_vectors(0, "missing").len() == 0, "missing vector field");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/16_term_vectors.dslb");
-r = system lmcode/lmlucene --dsl lmcode/build/gallery/16_term_vectors.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/16_term_vectors.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

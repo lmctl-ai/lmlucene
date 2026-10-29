@@ -21,7 +21,7 @@ assert_true(found.has("1"), "expected document 1");
 hits.emit("Exact phrase search");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/04_phrase_query.dslb");
-r = system lmcode/lmlucene --dsl lmcode/build/gallery/04_phrase_query.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/04_phrase_query.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

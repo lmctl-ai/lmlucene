@@ -5,7 +5,9 @@ Build Apache Lucene from this fork, then operate its Java objects from a typed
 and SAM callbacks that override Lucene analysis and scoring behavior.
 
 The fork is based on Lucene 10.5.2. The Java SDK is pinned in [sdk.lock](sdk.lock);
-this integration uses DSLB v6. It runs on a JVM; it is not a GraalVM native binary.
+this integration uses DSLB v6. It runs on a JVM or as a GraalVM native executable.
+[Releases](https://github.com/lmctl-ai/lmlucene/releases) provide Linux, macOS and
+Windows executables requiring no JVM; see the [release guide](../durable-memory/releases.md).
 
 ## Build and try
 
@@ -45,6 +47,12 @@ new path for an isolated demonstration. Query syntax is Lucene QueryParser synta
 The build produces `lmcode/build/lmlucene.jar` plus Lucene dependency JARs in
 `lmcode/build/lib`. `lmcode/lmlucene` is the launcher. These Lucene JARs are built
 from this checkout, not fetched as precompiled Maven artifacts.
+
+The portable equivalent is `python lmcode/build.py`. With GraalVM on PATH,
+`python lmcode/build-native.py` traces the JVM examples, builds a native executable,
+then tests it. To run any example against that executable, set `LMLUCENE_ARGV`
+to its JSON argv array (e.g. `["C:/tools/lmlucene.exe"]`); the native test driver
+does this automatically. File indexes use NIOFSDirectory on both runtimes.
 
 ## How compilation and execution fit together
 
@@ -134,7 +142,8 @@ lmlucene run --input-json '{"op":"run","params":{"program":"lmcode/build/basic.d
 because its bytecode may mutate indexes or files. `--readonly` refuses execution;
 `--dryrun` validates bytecode/schema/imports without running the body or callbacks.
 The published development CLI schema is [cli.schema.dev.json](cli.schema.dev.json).
-No released/latest channel or package installation is claimed.
+The repository root also publishes `cli.schema.latest.json` for schema discovery;
+native executable releases are gated by the full five-platform test matrix.
 
 Stdout contains exactly one `{ok,result}` or `{ok:false,phase,code,message,...}`
 JSON envelope. `TopDocs.emit(label)` adds results to `result.searches`, retaining

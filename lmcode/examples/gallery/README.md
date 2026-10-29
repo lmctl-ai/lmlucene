@@ -40,6 +40,10 @@ examples use in-memory indexes. Example 01 uses the three bundled files in
 `lmcode/build/gallery`. Examples create their output directory themselves.
 Run one gallery process at a time because compiled output paths are shared.
 
+To use a [released native binary](https://github.com/lmctl-ai/lmlucene/releases),
+set `LMLUCENE_ARGV` to its JSON argv array, such as `["/path/lmlucene"]` or
+`["C:/tools/lmlucene.exe"]`. No JVM is needed when running against that binary.
+
 For an index path and search expression supplied by the caller, use the existing
 [index.lms](../index.lms) and [query.lms](../query.lms) examples.
 

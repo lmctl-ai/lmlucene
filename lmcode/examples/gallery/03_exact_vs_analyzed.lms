@@ -19,7 +19,7 @@ assert_true(searcher.count(term_query("body", "abc")) == 1, "analyzed token is l
 searcher.search(term_query("sku", "AbC-123"), 10).emit("exact SKU");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/03_exact_vs_analyzed.dslb");
-r = system lmcode/lmlucene --dsl lmcode/build/gallery/03_exact_vs_analyzed.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/03_exact_vs_analyzed.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

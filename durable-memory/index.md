@@ -1,8 +1,10 @@
 # lmlucene durable memory
 
-This checkout is a fork of Apache Lucene, based on tag `releases/lucene/10.5.2`
-(`145d89cd30c38d25e39a0a2232cf00eee208b9cf`). Branch: `lmcode-host`.
-The integration lives entirely in `lmcode/`; upstream Lucene implementations are unchanged.
+This is https://github.com/lmctl-ai/lmlucene, public, branch `main`. It retains
+Apache Lucene source from tag `releases/lucene/10.5.2`
+(`145d89cd30c38d25e39a0a2232cf00eee208b9cf`) and the host/gallery developed in
+the earlier `lmctl-ai/lucene` fork. The integration lives in `lmcode/`;
+upstream Lucene implementations are unchanged.
 
 Start with [the host guide](../lmcode/README.md), then:
 
@@ -16,6 +18,8 @@ Start with [the host guide](../lmcode/README.md), then:
 - [References and decisions](references.md): PyLucene API mapping and SDK constraints.
 - [Example gallery](gallery.md): 32 online-source-inspired `.lms` examples and
   the analysis, term-vector, sorting, pagination, facet and KNN bindings they use.
+- [Native releases](releases.md): five-platform GraalVM build/test/release gate,
+  portable scripts, asset names, versioning and distribution requirements.
 
 ## Important invariants
 
@@ -58,10 +62,12 @@ JDK 21+, Python 3, and a v6-capable LMScript (tested with 0.2.444):
 
 The host build compiles Lucene from this checkout and vendors the Java SDK by
 hash in `lmcode/sdk.lock`; no Maven artifact substitutes for the fork.
-Build outputs remain ignored. No binary release is implied by a source push.
+Build outputs remain ignored. Main pushes trigger native build/test on five
+platforms; release publication requires the complete matrix to succeed.
 
 Verified locally on 2026-10-29, Linux arm64, OpenJDK 21.0.12.1 and LMScript
 0.2.444: the source build, all 14 integration groups, all 32 gallery examples
 through normal preflight, and the single LMScript gallery runner passed. The focused
 upstream suites reported 129 passing tests and one skipped test, zero failures.
-CI adds an Ubuntu x64 check; local results do not imply a completed CI run.
+Local results do not imply a completed multi-platform CI run; consult Actions
+and the actual GitHub release for published-build status.

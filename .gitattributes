@@ -4,3 +4,12 @@ versions.toml  text eol=lf
 
 # Gradle files are always in LF.
 *.gradle          text eol=lf
+
+# Bytecode schema hashes, SDK pins and executable examples must be byte-identical on Windows.
+*.json text eol=lf
+*.java text eol=lf
+*.py text eol=lf
+*.lms text eol=lf
+*.sh text eol=lf
+lmcode/lmlucene text eol=lf
+lmcode/vendor/** -text

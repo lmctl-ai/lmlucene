@@ -24,7 +24,7 @@ assert_true(matched_authors.count("Ada") == 1 && matched_authors.count("Ben") ==
 all_authors.emit("all authors");matched_authors.emit("authors matching lucene");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/24_facet_counts.dslb");
-r = system lmcode/lmlucene --dsl lmcode/build/gallery/24_facet_counts.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/24_facet_counts.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

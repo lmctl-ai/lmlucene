@@ -52,7 +52,7 @@ public final class Main {
     String phase = "load";
     try (Host host = new Host()) {
       if (Arrays.equals(args, new String[] {"--version"})) {
-        System.out.println("lmlucene 0.1.0 (Lucene 10.5.2; DSLB v6)");
+        System.out.println("lmlucene " + BuildInfo.VERSION + " (Lucene 10.5.2; DSLB v6)");
         return 0;
       }
       if (Arrays.equals(args, new String[] {"--help"})) {

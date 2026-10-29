@@ -20,7 +20,7 @@ assert_true(hits.at(0).document().get("id") == "1", "title match");
 hits.emit("fielded query");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/02_fielded_search.dslb");
-r = system lmcode/lmlucene --dsl lmcode/build/gallery/02_fielded_search.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/02_fielded_search.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

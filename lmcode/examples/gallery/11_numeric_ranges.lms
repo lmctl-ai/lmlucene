@@ -22,7 +22,7 @@ assert_true(searcher.count(parse_query("price", "[10 TO 50]", analyzer)) == 0, "
 hits.emit("prices 10 through 50");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/11_numeric_ranges.dslb");
-r = system lmcode/lmlucene --dsl lmcode/build/gallery/11_numeric_ranges.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/11_numeric_ranges.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

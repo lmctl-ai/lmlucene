@@ -5,11 +5,12 @@ import os
 from pathlib import Path
 import subprocess
 import tempfile
+import shutil
 
 ROOT = Path(__file__).resolve().parents[2]
-HOST = str(ROOT / 'lmcode/lmlucene')
-COMPILER = os.environ.get('LMSCRIPT_BIN', 'lmscript')
-ENV = dict(os.environ, PATH=str(ROOT / 'lmcode') + os.pathsep + os.environ['PATH'])
+HOST = json.loads(os.environ.get('LMLUCENE_ARGV', json.dumps([str(ROOT / 'lmcode/lmlucene')])))
+COMPILER = shutil.which(os.environ.get('LMSCRIPT_BIN', 'lmscript')) or 'lmscript'
+ENV = dict(os.environ, PATH=os.environ['PATH'] + os.pathsep + str(ROOT / 'lmcode'))
 checks = 0
 
 def run(argv, expected=0):
@@ -42,11 +43,13 @@ with tempfile.TemporaryDirectory(prefix='lmlucene-test-') as tmp:
 
     def execute(body, expected=0):
         bytecode, _ = compile_body(body)
-        return envelope([HOST, '--dsl', bytecode], expected)
+        return envelope([*HOST, '--dsl', bytecode], expected)
 
-    assert run([HOST, '--dsl-schema', '--json']).stdout == (ROOT / 'lmcode/lucene.dsl.json').read_text()
-    assert run([HOST, '--schema']).stdout == (ROOT / 'lmcode/cli.schema.dev.json').read_text()
-    have = run([HOST, '--dsl-signatures']).stdout.splitlines()
+    assert run([*HOST, '--dsl-schema', '--json']).stdout == (ROOT / 'lmcode/lucene.dsl.json').read_text()
+    assert run([*HOST, '--schema']).stdout == (ROOT / 'lmcode/cli.schema.dev.json').read_text()
+    assert (ROOT / 'cli.schema.dev.json').read_bytes() == (ROOT / 'lmcode/cli.schema.dev.json').read_bytes()
+    assert (ROOT / 'cli.schema.latest.json').read_bytes() == (ROOT / 'lmcode/cli.schema.dev.json').read_bytes()
+    have = run([*HOST, '--dsl-signatures']).stdout.splitlines()
     want = run([COMPILER, '--dsl-signatures', ROOT / 'lmcode/lucene.dsl.json']).stdout.splitlines()
     assert sorted(have) == sorted(want), (set(have)-set(want),set(want)-set(have))
     passed('published schemas and all registry signatures match')
@@ -154,26 +157,26 @@ with tempfile.TemporaryDirectory(prefix='lmlucene-test-') as tmp:
     for offset, value, code in [(0,0,'LOAD_BAD_BYTECODE'), (5,5,'LOAD_BAD_BYTECODE'),(6,0,'LOAD_SCHEMA_MISMATCH')]:
         raw=bytearray(good.read_bytes());raw[offset]=value if raw[offset]!=value else 1
         bad=tmp/f'bad-{offset}.dslb';bad.write_bytes(raw)
-        payload=envelope([HOST,'--dsl',bad],3)
+        payload=envelope([*HOST,'--dsl',bad],3)
         assert payload['phase']=='load' and payload['code']==code,payload
     truncated=tmp/'truncated.dslb';truncated.write_bytes(good.read_bytes()[:-1])
-    assert envelope([HOST,'--dsl',truncated],3)['phase']=='load'
+    assert envelope([*HOST,'--dsl',truncated],3)['phase']=='load'
     passed('bad magic, old bytecode version, schema mismatch and truncation rejected before effects')
 
     no_effects=tmp/'must not exist'
     program,_=compile_body(f'fs_directory({json.dumps(str(no_effects))});')
-    assert envelope([HOST,'run','--program',program,'--dryrun'])['result']['validated']
+    assert envelope([*HOST,'run','--program',program,'--dryrun'])['result']['validated']
     assert not no_effects.exists()
-    assert envelope([HOST,'run','--program',program,'--readonly'],3)['code']=='READONLY'
+    assert envelope([*HOST,'run','--program',program,'--readonly'],3)['code']=='READONLY'
     assert not no_effects.exists()
     passed('dry-run and read-only policy create no directory')
 
     document=json.dumps({'op':'run','params':{'program':str(good)}})
-    assert envelope([HOST,'run','--input-json',document])['ok']
+    assert envelope([*HOST,'run','--input-json',document])['ok']
     input_file=tmp/'input.json';input_file.write_text(document)
-    assert envelope([HOST,'run','--input-file',input_file])['ok']
+    assert envelope([*HOST,'run','--input-file',input_file])['ok']
     for args in [[],['--unknown'],['run','--input-json','{}'],['run','--program',str(good),'--typo'],['run','--input-json',json.dumps({'op':'run','params':{'program':42}})]]:
-        assert envelope([HOST,*args],2)['code']=='CLI_USAGE'
+        assert envelope([*HOST,*args],2)['code']=='CLI_USAGE'
     passed('CLI flags, JSON input, file input and strict usage validation')
 
 print(f'PASS {checks} integration groups')

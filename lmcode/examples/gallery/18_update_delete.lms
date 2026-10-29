@@ -22,7 +22,7 @@ assert_true(after_delete.num_docs() == 0, "delete visible to new reader");
 index_searcher(after_delete).search(all_query(), 10).emit("after delete");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/18_update_delete.dslb");
-r = system lmcode/lmlucene --dsl lmcode/build/gallery/18_update_delete.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/18_update_delete.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

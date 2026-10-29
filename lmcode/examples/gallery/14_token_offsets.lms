@@ -14,7 +14,7 @@ assert_true(tokens.at(1).start() == 7 && tokens.at(1).end() == 13, "source offse
 tokens.emit("token stream");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/14_token_offsets.dslb");
-r = system lmcode/lmlucene --dsl lmcode/build/gallery/14_token_offsets.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/14_token_offsets.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

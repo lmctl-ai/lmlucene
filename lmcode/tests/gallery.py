@@ -5,11 +5,12 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import shutil
 
 root = Path(__file__).resolve().parents[2]
 gallery = root / 'lmcode/examples/gallery'
 manifest = json.loads((gallery / 'manifest.json').read_text())
-compiler = os.environ.get('LMSCRIPT_BIN', 'lmscript')
+compiler = shutil.which(os.environ.get('LMSCRIPT_BIN', 'lmscript')) or 'lmscript'
 listed = [e['file'] for e in manifest['examples']]
 actual = sorted(p.name for p in gallery.glob('*.lms'))
 assert sorted(listed) == actual and len(set(listed)) == len(listed), 'Gallery manifest drift'

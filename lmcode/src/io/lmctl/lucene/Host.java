@@ -128,7 +128,8 @@ public final class Host implements AutoCloseable {
         "fs_directory",
         "Directory",
         List.of("string"),
-        (s, a) -> own("Directory", FSDirectory.open(Path.of(text(a[0])))));
+        // Avoid JVM-only foreign-memory mapping in GraalVM executables; index bytes stay portable.
+        (s, a) -> own("Directory", new NIOFSDirectory(Path.of(text(a[0])))));
     fn(
         "standard_analyzer",
         "Analyzer",

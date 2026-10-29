@@ -23,7 +23,7 @@ assert_true(found.has("2"), "expected document 2");
 hits.emit("One-edit typo tolerance");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/08_fuzzy_query.dslb");
-r = system lmcode/lmlucene --dsl lmcode/build/gallery/08_fuzzy_query.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/08_fuzzy_query.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

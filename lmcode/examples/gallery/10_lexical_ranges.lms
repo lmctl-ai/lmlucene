@@ -23,7 +23,7 @@ inclusive.emit("inclusive dates");
 exclusive.emit("exclusive dates");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/10_lexical_ranges.dslb");
-r = system lmcode/lmlucene --dsl lmcode/build/gallery/10_lexical_ranges.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/10_lexical_ranges.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

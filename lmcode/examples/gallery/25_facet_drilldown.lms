@@ -28,7 +28,7 @@ assert_true(hits.total() == 1 && hits.at(0).document().get("id") == "3", "two-di
 hits.emit("2026 by Ada");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/25_facet_drilldown.dslb");
-r = system lmcode/lmlucene --dsl lmcode/build/gallery/25_facet_drilldown.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/25_facet_drilldown.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

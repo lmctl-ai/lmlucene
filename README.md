@@ -1,67 +1,111 @@
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one or more
-    contributor license agreements.  See the NOTICE file distributed with
-    this work for additional information regarding copyright ownership.
-    The ASF licenses this file to You under the Apache License, Version 2.0
-    the "License"); you may not use this file except in compliance with
-    the License.  You may obtain a copy of the License at
+# lmlucene
 
-        http://www.apache.org/licenses/LICENSE-2.0
+[![Build, test and publish](https://github.com/lmctl-ai/lmlucene/actions/workflows/release.yml/badge.svg)](https://github.com/lmctl-ai/lmlucene/actions/workflows/release.yml)
 
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
- -->
+Apache Lucene indexing and search from typed `_lmcode_` blocks inside LMScript.
+Expose Java Lucene objects, customize analysis and scoring with SAM rule entries,
+and run as a standalone GraalVM executable on Linux, macOS or Windows.
 
-# Apache Lucene
+## Install a native executable
 
-This fork adds [LMScript/lmcode bindings](lmcode/README.md): build Lucene from
-source, index and query through typed Java objects, and customize token analysis
-and scoring with SAM rule callbacks. Start with `./lmcode/test.sh` or
-[the durable-memory index](durable-memory/index.md).
+[GitHub Releases](https://github.com/lmctl-ai/lmlucene/releases) contains native
+executables for Linux x64/arm64, macOS x64/arm64 and Windows x64, plus archives
+with licenses and schemas. No Java installation is required to run them.
+Check downloads against the release's `SHA256SUMS`, then place `lmlucene`
+(or `lmlucene.exe`) on PATH. Unix binaries need executable permission.
 
-![Lucene Logo](https://lucene.apache.org/theme/images/lucene/lucene_logo_green_300.png?v=0e493d7a)
+With LMScript installed, its native-tool installer can select the platform asset:
 
-Apache Lucene is a high-performance, full-featured text search engine library
-written in Java.
+```sh
+lmscript install github:lmctl-ai/lmlucene@latest
+lmlucene --version
+lmlucene --dsl-schema --json
+```
 
-[![Build Status](https://ci-builds.apache.org/job/Lucene/job/Lucene-Artifacts-main/badge/icon?subject=Lucene)](https://ci-builds.apache.org/job/Lucene/job/Lucene-Artifacts-main/)
-[![Revved up by Develocity](https://img.shields.io/badge/Revved%20up%20by-Develocity-06A0CE?logo=Gradle&labelColor=02303A)](https://develocity.apache.org/scans?search.buildToolType=gradle&search.rootProjectNames=lucene-root)
+Linux binaries target glibc 2.39+; Windows may need the MSVC x64 redistributable.
+macOS binaries are unsigned. Building from source remains available on other
+supported environments. `.lms` source execution requires LMScript; the native
+host itself reads compiled `.dslb` programs.
 
-## Online Documentation
+## Index and query
 
-This README file only contains basic setup instructions.  For more
-comprehensive documentation, visit:
+Save this as `hello.lms` with `lmlucene` on PATH:
 
-- Latest Releases: <https://lucene.apache.org/core/documentation.html>
-- Nightly: <https://ci-builds.apache.org/job/Lucene/job/Lucene-Artifacts-main/javadoc/>
-- New contributors should start by reading [Contributing Guide](./CONTRIBUTING.md)
-- Build System Documentation: [help/](./help/)
-- Migration Guide: [lucene/MIGRATE.md](./lucene/MIGRATE.md)
+```lmscript
+program = _lmcode_ cli="lmlucene";
+let directory = memory_directory();
+let analyzer = standard_analyzer();
+let writer = index_writer(directory, writer_config(analyzer));
+writer.add(document().keyword("id", "1", true).text("body", "Hello Lucene", true));
+let reader = writer.reader();
+index_searcher(reader).search(term_query("body", "lucene"), 10).emit("matches");
+end _lmcode_
+savedsl(program, "hello.dslb");
+r = system lmlucene --dsl hello.dslb;
+assert(r.code == 0);
+print(r.stdout);
+```
 
-## Building
+Run `lmscript hello.lms`. The outer language compiles the embedded typed program;
+the host checks its schema hash and runs it against real Lucene objects.
 
-### Basic steps:
-  
-1. Install OpenJDK 21.
-2. Clone Lucene's git repository (or download the source distribution).
-3. Run gradle launcher script (`gradlew`).
+The [32-example gallery](lmcode/examples/gallery/README.md) covers file indexing,
+query syntax, stemming, term vectors, sorting, pagination, facets, KNN and SAM
+customization. Each example has assertions and upstream source links. The
+[host guide](lmcode/README.md) describes the full API and persistent index examples.
 
-We'll assume that you know how to get and set up the JDK - if you don't, then we suggest starting at https://jdk.java.net/ and learning more about Java, before returning to this README.
+## Build and test
 
-## Contributing
+The repository retains the Apache Lucene 10.5.2 source snapshot and pins the
+lmcode-java SDK. Requires JDK 21+, Python 3.12 and LMScript 0.2.444:
 
-Bug fixes, improvements and new features are always welcome!
-Please review the [Contributing to Lucene
-Guide](./CONTRIBUTING.md) for information on
-contributing.
+```sh
+npm install -g @lmctl-ai/lmctl@0.2.444
+python3 lmcode/build.py
+python3 lmcode/tests/integration.py
+python3 lmcode/tests/gallery.py
+```
 
-- Additional Developer Documentation: [dev-docs/](./dev-docs/)
+On Windows, use `python` and the native build/test workflow below. With GraalVM
+Community 21.0.2, its native compiler prerequisites, and its bin directory on PATH:
 
-## Discussion and Support
+```sh
+python3 lmcode/build.py
+python3 lmcode/build-native.py
+```
 
-- [Users Mailing List](https://lucene.apache.org/core/discussion.html#java-user-list-java-userluceneapacheorg)
-- [Developers Mailing List](https://lucene.apache.org/core/discussion.html#developer-lists)
-- IRC: `#lucene` and `#lucene-dev` on freenode.net
+This traces all examples on the JVM, compiles a real executable under
+`lmcode/build/native`, and tests the executable with the complete integration
+suite and gallery. Set `LMLUCENE_VERSION=X.Y.Z` to stamp a version; default is 0.1.0.
+The JVM launcher remains available as `lmcode/lmlucene` on Unix.
+
+To run repository examples against an installed native binary instead of the
+JVM launcher, set `LMLUCENE_ARGV` to a JSON argv array, for example
+`["/absolute/path/lmlucene"]` or `["C:/tools/lmlucene.exe"]`. Then run:
+
+```sh
+lmscript --no-preflight lmcode/examples/run-gallery.lms
+```
+
+## Automatic releases
+
+Every push to `main` automatically builds and tests all five platforms. Only
+a successful complete matrix publishes `v0.1.<run number>` with raw executables,
+archives, schemas, provenance and checksums. Pull requests build and test without
+publishing. Manual workflow dispatch is also supported. See the
+[workflow](.github/workflows/release.yml) and [release guide](durable-memory/releases.md).
+
+Like [lmaws](https://github.com/lmctl-ai/lmaws), the tool publishes a CLI schema:
+`lmlucene --schema` describes `run --program FILE`, JSON input, dry-run and
+read-only policy. [cli.schema.latest.json](cli.schema.latest.json) and
+[cli.schema.dev.json](cli.schema.dev.json) expose that contract. Its API contract
+version is independent of the executable build number.
+
+## Project references and licenses
+
+Start agent work at [durable-memory/index.md](durable-memory/index.md).
+Lucene source: Apache-2.0 ([LICENSE](LICENSE.txt), [NOTICE](NOTICE.txt)); lmcode-java: MIT.
+See [third-party notices](THIRD_PARTY_NOTICES.md) and the preserved
+[upstream Lucene README](README.lucene.md). The initial source is Lucene commit
+`145d89cd30c38d25e39a0a2232cf00eee208b9cf`, with host work from
+[lmctl-ai/lucene](https://github.com/lmctl-ai/lucene/tree/lmcode-host).
