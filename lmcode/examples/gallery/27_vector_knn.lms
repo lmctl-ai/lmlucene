@@ -25,7 +25,7 @@ assert_true(abs(hits.at(0).score() - 1.0) < 0.00001, "Euclidean identity score")
 hits.emit("two nearest neighbors");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/27_vector_knn.dslb");
-r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/27_vector_knn.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --lmcode lmcode/build/gallery/27_vector_knn.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

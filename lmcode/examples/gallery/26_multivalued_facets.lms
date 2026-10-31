@@ -22,7 +22,7 @@ assert_true(tags.len() == 2 && tags.label(0) == "search" && tags.value(0) == 2, 
 tags.emit("multi-valued tags");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/26_multivalued_facets.dslb");
-r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/26_multivalued_facets.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --lmcode lmcode/build/gallery/26_multivalued_facets.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

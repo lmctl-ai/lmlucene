@@ -43,14 +43,14 @@ with tempfile.TemporaryDirectory(prefix='lmlucene-test-') as tmp:
 
     def execute(body, expected=0):
         bytecode, _ = compile_body(body)
-        return envelope([*HOST, '--dsl', bytecode], expected)
+        return envelope([*HOST, '--lmcode', bytecode], expected)
 
-    assert run([*HOST, '--dsl-schema', '--json']).stdout == (ROOT / 'lmcode/lucene.dsl.json').read_text()
+    assert run([*HOST, '--lmcode-schema', '--json']).stdout == (ROOT / 'lmcode/lucene.dsl.json').read_text()
     assert run([*HOST, '--schema']).stdout == (ROOT / 'lmcode/cli.schema.dev.json').read_text()
     assert (ROOT / 'cli.schema.dev.json').read_bytes() == (ROOT / 'lmcode/cli.schema.dev.json').read_bytes()
     assert (ROOT / 'cli.schema.latest.json').read_bytes() == (ROOT / 'lmcode/cli.schema.dev.json').read_bytes()
-    have = run([*HOST, '--dsl-signatures']).stdout.splitlines()
-    want = run([COMPILER, '--dsl-signatures', ROOT / 'lmcode/lucene.dsl.json']).stdout.splitlines()
+    have = run([*HOST, '--lmcode-signatures']).stdout.splitlines()
+    want = run([COMPILER, '--lmcode-signatures', ROOT / 'lmcode/lucene.dsl.json']).stdout.splitlines()
     assert sorted(have) == sorted(want), (set(have)-set(want),set(want)-set(have))
     passed('published schemas and all registry signatures match')
 
@@ -157,10 +157,10 @@ with tempfile.TemporaryDirectory(prefix='lmlucene-test-') as tmp:
     for offset, value, code in [(0,0,'LOAD_BAD_BYTECODE'), (5,5,'LOAD_BAD_BYTECODE'),(6,0,'LOAD_SCHEMA_MISMATCH')]:
         raw=bytearray(good.read_bytes());raw[offset]=value if raw[offset]!=value else 1
         bad=tmp/f'bad-{offset}.dslb';bad.write_bytes(raw)
-        payload=envelope([*HOST,'--dsl',bad],3)
+        payload=envelope([*HOST,'--lmcode',bad],3)
         assert payload['phase']=='load' and payload['code']==code,payload
     truncated=tmp/'truncated.dslb';truncated.write_bytes(good.read_bytes()[:-1])
-    assert envelope([*HOST,'--dsl',truncated],3)['phase']=='load'
+    assert envelope([*HOST,'--lmcode',truncated],3)['phase']=='load'
     passed('bad magic, old bytecode version, schema mismatch and truncation rejected before effects')
 
     no_effects=tmp/'must not exist'

@@ -23,7 +23,7 @@ assert_true(found.has("2"), "expected document 2");
 hits.emit("Regular-expression terms");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/09_regexp_query.dslb");
-r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/09_regexp_query.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --lmcode lmcode/build/gallery/09_regexp_query.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

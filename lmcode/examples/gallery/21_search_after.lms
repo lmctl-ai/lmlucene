@@ -29,7 +29,7 @@ assert_true(seen.len() == 5, "all documents visited");
 first.emit("page 1");second.emit("page 2");third.emit("page 3");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/21_search_after.dslb");
-r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/21_search_after.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --lmcode lmcode/build/gallery/21_search_after.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

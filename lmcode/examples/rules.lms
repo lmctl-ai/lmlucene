@@ -39,7 +39,7 @@ assert_true(abs(weighted_score - original_score * 10.0) < 0.00001, "SAM callback
 assert_true(searcher.count(parse_query("body", "automobile", analyzer)) == 2, "query analyzer uses same token rule");
 end _lmcode_
 savedsl(program, "lmcode/build/rules.dslb");
-r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/rules.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --lmcode lmcode/build/rules.dslb;
 if (r.code != 0) {
   print(r.stderr);
 }

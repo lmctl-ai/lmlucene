@@ -7,7 +7,7 @@ import java.util.*;
 
 public final class Main {
   private static final String USAGE =
-      "lmlucene --version | --schema | --dsl-schema [--json] | --dsl-signatures | --dsl FILE | run"
+      "lmlucene --version | --schema | --lmcode-schema [--json] | --lmcode-signatures | --lmcode FILE | run"
           + " --program FILE [--dryrun] [--readonly]";
 
   public static String cliSchema() {
@@ -65,18 +65,18 @@ public final class Main {
         System.out.println(cliSchema());
         return 0;
       }
-      if (Arrays.equals(args, new String[] {"--dsl-schema"})
-          || Arrays.equals(args, new String[] {"--dsl-schema", "--json"})) {
+      if (Arrays.equals(args, new String[] {"--lmcode-schema"})
+          || Arrays.equals(args, new String[] {"--lmcode-schema", "--json"})) {
         System.out.write(host.schema());
         return 0;
       }
-      if (Arrays.equals(args, new String[] {"--dsl-signatures"})) {
+      if (Arrays.equals(args, new String[] {"--lmcode-signatures"})) {
         host.registry.signatures().forEach(System.out::println);
         return 0;
       }
       boolean dry = false, readonly = false;
       String file = null;
-      if (args.length == 2 && args[0].equals("--dsl")) file = args[1];
+      if (args.length == 2 && args[0].equals("--lmcode")) file = args[1];
       else if (args.length > 0 && args[0].equals("run")) {
         for (int i = 1; i < args.length; i++) {
           if (args[i].equals("--program") && file == null && i + 1 < args.length) file = args[++i];

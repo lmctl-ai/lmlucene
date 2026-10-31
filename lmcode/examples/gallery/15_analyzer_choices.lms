@@ -17,7 +17,7 @@ whitespace.emit("whitespace");
 keyword.emit("keyword");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/15_analyzer_choices.dslb");
-r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/15_analyzer_choices.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --lmcode lmcode/build/gallery/15_analyzer_choices.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

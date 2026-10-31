@@ -47,7 +47,7 @@ def build():
     execute(['javac', '--release', '21', '-encoding', 'UTF-8', '-cp', classpath,
              '-d', BUILD / 'classes', '@lmcode/build/sources.txt'])
     execute(['jar', '--create', '--file', BUILD / 'lmlucene.jar', '--main-class', 'io.lmctl.lucene.Main', '-C', BUILD / 'classes', '.'])
-    schema = execute([*java_argv(), '--dsl-schema', '--json'], stdout=subprocess.PIPE).stdout
+    schema = execute([*java_argv(), '--lmcode-schema', '--json'], stdout=subprocess.PIPE).stdout
     (BUILD / 'lucene.dsl.json').write_bytes(schema)
     print(f'Built lmlucene {version} with Lucene from this checkout', flush=True)
 

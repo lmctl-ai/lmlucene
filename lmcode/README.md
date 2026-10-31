@@ -67,7 +67,7 @@ let searcher = index_searcher(reader);
 searcher.search(term_query("body", "lucene"), 10).emit("matches");
 end _lmcode_
 savedsl(program, "lmcode/build/hello.dslb");
-r = system lmcode/lmlucene --dsl lmcode/build/hello.dslb;
+r = system lmcode/lmlucene --lmcode lmcode/build/hello.dslb;
 assert(r.code == 0);
 print(r.stdout);
 ```
@@ -79,7 +79,7 @@ the Java host. The host verifies the schema hash and imports before executing.
 The standard lmcode catalog is implicitly available inside the block.
 
 Use `cli="lmlucene"` in place of `schema="..."` to discover the schema from the
-host on PATH. `lmlucene --dsl-schema --json` returns the exact schema bytes.
+host on PATH. `lmlucene --lmcode-schema --json` returns the exact schema bytes.
 
 ## SAM rules override Lucene behavior
 
@@ -127,8 +127,8 @@ The host publishes two distinct schemas:
 | Command | Purpose |
 |---|---|
 | `--schema` / `--cli-schema` | `cli.schema.v1`: the `run` operation for LMScript imports |
-| `--dsl-schema --json` | The object API compiled into `_lmcode_` bytecode |
-| `--dsl-signatures` | Canonical registered host + standard signatures |
+| `--lmcode-schema --json` | The object API compiled into `_lmcode_` bytecode |
+| `--lmcode-signatures` | Canonical registered host + standard signatures |
 
 ```sh
 export PATH="$PWD/lmcode:$PATH"

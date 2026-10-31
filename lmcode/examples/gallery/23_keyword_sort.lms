@@ -21,7 +21,7 @@ assert_true(hits.at(2).document().get("id") == "zebra", "alphabetical last");
 hits.emit("name order");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/23_keyword_sort.dslb");
-r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/23_keyword_sort.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --lmcode lmcode/build/gallery/23_keyword_sort.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

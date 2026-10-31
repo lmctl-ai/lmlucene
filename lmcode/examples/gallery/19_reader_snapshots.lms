@@ -19,7 +19,7 @@ index_searcher(before).search(all_query(), 10).emit("old snapshot");
 index_searcher(after).search(all_query(), 10).emit("new snapshot");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/19_reader_snapshots.dslb");
-r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/19_reader_snapshots.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --lmcode lmcode/build/gallery/19_reader_snapshots.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

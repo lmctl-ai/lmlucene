@@ -12,7 +12,7 @@ for (hit in hits) {
 }
 end _lmcode_
 savedsl(program, "lmcode/build/query.dslb");
-r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/query.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --lmcode lmcode/build/query.dslb;
 if (r.code != 0) {
   print(r.stderr);
 }

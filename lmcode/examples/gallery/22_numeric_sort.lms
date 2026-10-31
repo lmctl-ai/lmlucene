@@ -22,7 +22,7 @@ assert_true(descending.at(0).document().get("id") == "high", "numeric descending
 ascending.emit("cheapest first");descending.emit("most expensive first");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/22_numeric_sort.dslb");
-r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/22_numeric_sort.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --lmcode lmcode/build/gallery/22_numeric_sort.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

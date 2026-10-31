@@ -19,7 +19,7 @@ With LMScript installed, its native-tool installer can select the platform asset
 ```sh
 lmscript install github:lmctl-ai/lmlucene@latest
 lmlucene --version
-lmlucene --dsl-schema --json
+lmlucene --lmcode-schema --json
 ```
 
 Linux binaries target glibc 2.39+; Windows may need the MSVC x64 redistributable.
@@ -41,7 +41,7 @@ let reader = writer.reader();
 index_searcher(reader).search(term_query("body", "lucene"), 10).emit("matches");
 end _lmcode_
 savedsl(program, "hello.dslb");
-r = system lmlucene --dsl hello.dslb;
+r = system lmlucene --lmcode hello.dslb;
 assert(r.code == 0);
 print(r.stdout);
 ```

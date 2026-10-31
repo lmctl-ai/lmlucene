@@ -22,7 +22,7 @@ assert_true(hits.at(0).document().get("id") == "1", "correct filtered document")
 hits.emit("filtered guides");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/06_boolean_filters.dslb");
-r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/06_boolean_filters.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --lmcode lmcode/build/gallery/06_boolean_filters.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

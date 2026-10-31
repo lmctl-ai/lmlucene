@@ -22,7 +22,7 @@ assert_true(hits.total() == 2, "two files mention Lucene");
 hits.emit("file matches");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/01_index_files.dslb");
-r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/01_index_files.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --lmcode lmcode/build/gallery/01_index_files.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

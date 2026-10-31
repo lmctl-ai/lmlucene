@@ -26,7 +26,7 @@ analyzer.tokens("body", "automobile colour").emit("normalized tokens");
 hits.emit("canonical query");
 end _lmcode_
 savedsl(program, "lmcode/build/gallery/29_sam_normalization.dslb");
-r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/gallery/29_sam_normalization.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --lmcode lmcode/build/gallery/29_sam_normalization.dslb;
 if (r.code != 0) { print(r.stderr); }
 assert(r.code == 0);
 print(r.stdout);

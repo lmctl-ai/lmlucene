@@ -25,7 +25,7 @@ Start with [the host guide](../lmcode/README.md), then:
 
 - lmcode is the typed `_lmcode_` block inside LMScript. LMScript compiles it;
   this Java host executes DSLB v6 through the pinned lmcode-java SDK.
-- Schema and registry share one registration table. `--dsl-schema` output is
+- Schema and registry share one registration table. `--lmcode-schema` output is
   byte-exact, deterministic and SHA-256-bound by the bytecode loader. Update
   the committed schema deliberately when registrations change; tests reject drift.
 - The SDK refuses reentry into an active registry. Lucene callbacks execute a
@@ -71,3 +71,7 @@ through normal preflight, and the single LMScript gallery runner passed. The foc
 upstream suites reported 129 passing tests and one skipped test, zero failures.
 Local results do not imply a completed multi-platform CI run; consult Actions
 and the actual GitHub release for published-build status.
+
+## Hard host flag cutover
+
+The host exposes only the lmcode option family, with no retired aliases. The host gate proves exact schema/signature output, loader dispatch, and retired-option rejection before file effects in scratch HOME. SDK refreshes use lmcode/sync-sdk.py with an explicit local upstream clone/ref; check-pins.py verifies the complete resulting snapshot. Internal DSLB and .dslb names remain.

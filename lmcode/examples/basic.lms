@@ -26,7 +26,7 @@ analyzer.close();
 directory.close();
 end _lmcode_
 savedsl(program, "lmcode/build/basic.dslb");
-r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/basic.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --lmcode lmcode/build/basic.dslb;
 if (r.code != 0) {
   print(r.stderr);
 }

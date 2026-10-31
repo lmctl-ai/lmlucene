@@ -11,7 +11,7 @@ writer.close();
 print("Index committed");
 end _lmcode_
 savedsl(program, "lmcode/build/index.dslb");
-r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --dsl lmcode/build/index.dslb;
+r = system ${json_parse(env("LMLUCENE_ARGV", '["lmcode/lmlucene"]'))} --lmcode lmcode/build/index.dslb;
 if (r.code != 0) {
   print(r.stderr);
 }
